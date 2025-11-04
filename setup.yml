@@ -10,9 +10,6 @@ controller_credentials:
         bucket: "aap-tf-bucket-5abacb29-72ff-48ac-afeb-ec4f3cf6f0d7"
         key: "ec2-instance/terraform.tfstate"
         region: "us-east-2"
-        access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-
 
 controller_execution_environments:
   - name: "Terraform EE"
