@@ -17,6 +17,7 @@
     # terraform_state_bucket: "ansible-terraform-state-{{ lookup('env', 'AWS_ACCOUNT_ID') }}"
     terraform_state_bucket: "aap-tf-bucket-5abacb29-72ff-48ac-afeb-ec4f3cf6f0d7"
     terraform_project_path: "./terraform_files"
+    operation: apply
 
   tasks:
     - name: Ensure Terraform files directory exists
@@ -54,10 +55,12 @@
           access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
           secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
       register: terraform_apply_output
+      when: operation == "apply"
 
     - name: Display the Terraform apply output
       ansible.builtin.debug:
         var: terraform_apply_output.stdout_lines
+      when: operation == "apply"
 
     # Optional task to destroy the infrastructure
     - name: Destroy the Terraform configuration
@@ -71,9 +74,9 @@
           key: "ansible/terraform.tfstate"
           region: "{{ aws_region }}"
       register: terraform_destroy_output
-      when: false # Set this to 'true' to run the destroy command.
+      when: operation == "destroy"
 
     - name: Display the Terraform destroy output
       ansible.builtin.debug:
         var: terraform_destroy_output.stdout_lines
-      when: terraform_destroy_output is defined and false # Set 'when' to 'true' when running destroy.
+      when: operation == "destroy"
